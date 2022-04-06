@@ -49,8 +49,9 @@
   <div class="deviceDiv">
       裝置別：<span id="device"></span>
   </div>
-  <input id = "name_input" class = "inputStyle" type="text" placeholder="Hello Mobile App!"/>
+  <input id = "name_input" class = "inputStyle" type="text" placeholder="請輸入傳送到App的訊息"/>
   <button id="JSBtn" class = "JSBtn">傳送訊息到 App</button >
+  <div id="showInfoToJS">showInfoToJS(data) App傳送到JS的訊息會出現在這</div>
 
   <script>
     let urlParams = new URLSearchParams(window.location.search);
@@ -82,6 +83,7 @@
     });
 
     function sendInfoToMobielApp(data) {
+        console.log('sendInfoToMobielApp:' + data);
 
         //  addJavascriptInterface() 要定義 EsunAndroidWebView 名稱到 JS 的 global 變數
         if(isAndroid){
@@ -95,11 +97,12 @@
     }
     
     function showInfoToJS(msg) {
-        alert("來自 Mobile App 的資料：" + msg);
+        $('#showInfoToJS').text(msg);
     }
 
 
     // 確認CA 是否存在
+    
 
     // 傳遞明文
 
