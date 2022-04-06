@@ -51,6 +51,7 @@
   </div>
   <input id = "name_input" class = "inputStyle" type="text" placeholder="請輸入傳送到App的訊息"/>
   <button id="JSBtn" class = "JSBtn">傳送訊息到 App</button >
+  <div id="sendInfoToMobielApp">sendInfoToMobielApp(data) JS傳送到App的方式</div>
   <div id="showInfoToJS">showInfoToJS(data) App傳送到JS的訊息會出現在這</div>
 
   <script>
@@ -87,11 +88,13 @@
 
         //  addJavascriptInterface() 要定義 EsunAndroidWebView 名稱到 JS 的 global 變數
         if(isAndroid){
+            $('#sendInfoToMobielApp').text(`window.EsunAndroidWebView.showInfoFromJS(${data})`);
             window.EsunAndroidWebView.showInfoFromJS(data);
         }
 
         // WKWebview 元件 要定義 EsuniOSWebView 名稱到 JS 的 global 變數
         if(isIOS){
+            $('#sendInfoToMobielApp').text(`window.webkit.messageHandlers.EsuniOSWebView.postMessage(${data})`);
             window.webkit.messageHandlers.EsuniOSWebView.postMessage(data);
         }
     }
