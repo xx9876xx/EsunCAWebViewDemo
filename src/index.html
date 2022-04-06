@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-cn" />
+
+<title>測試 WebView 與 Javascript 互動</title>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<head>
+  <style>
+  body {background-color:#e6e6e6}
+
+  .JSBtn
+  {
+    color:white;
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    font-size:16px;
+    width:200px;
+    padding:6px;
+    background-color:#98bf21;
+    text-align:center;
+    border:none;
+    cursor:pointer;
+  }
+
+  .deviceDiv
+  {
+    color:white;
+    background-color:#2216cc;
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    text-align:center;
+    width:100%;
+    font-size:16px;
+    padding:6px
+  }
+
+  .inputStyle
+  {
+    width:250px;
+    font-size:16px;
+    padding:6px;
+  }
+  </style>
+</head>
+
+<body>
+  <p>測試 WebView 與 Javascript 互動</p>
+  <div class="deviceDiv">
+      裝置別：<span id="device"></span>
+  </div>
+  <input id = "name_input" class = "inputStyle" type="text" placeholder="Hello Mobile App!"/>
+  <button id="JSBtn" class = "JSBtn">傳送訊息到 App</button >
+
+  <script>
+    let urlParams = new URLSearchParams(window.location.search);
+    let device = !! urlParams.get('device') ? urlParams.get('device') : "";
+    let isIOS = false;
+    let isAndroid = false;
+
+    if (device.toLowerCase() === "ios")
+    {
+        device = "iOS";
+        isIOS = true;
+        isAndroid = false;
+    } else if (device.toLowerCase() === "android") {
+        device = "Android";
+        isIOS = false;
+        isAndroid = true;
+    } else {
+        device = "錯誤的裝置代碼！ 請在 QueryString 加上裝置別 ?device={iOS/Android}";
+        isIOS = false;
+        isAndroid = false;
+    }
+
+    $('#device').text(device);
+
+    // 當點網頁上的按鈕，會從JS發送訊息給Webview接收。
+    $('#JSBtn').on('click', () => {
+        let data = $('#name_input').val();
+        sendInfoToMobielApp(data);
+    });
+
+    function sendInfoToMobielApp(data) {
+
+        //  addJavascriptInterface() 要定義 EsunAndroidWebView 名稱到 JS 的 global 變數
+        if(isAndroid){
+            window.EsunAndroidWebView.showInfoFromJS(data);
+        }
+
+        // WKWebview 元件 要定義 EsuniOSWebView 名稱到 JS 的 global 變數
+        if(isIOS){
+            window.webkit.messageHandlers.EsuniOSWebView.postMessage(data);
+        }
+    }
+    
+    function showInfoToJS(msg) {
+        alert("來自 Mobile App 的資料：" + msg);
+    }
+
+
+    // 確認CA 是否存在
+
+    // 傳遞明文
+
+    
+
+  </script>
+</body>
+</html>
